@@ -1,8 +1,7 @@
-import logo from "./logo.svg";
 import "./App.css";
-import AppRouter from "./components/AppRouter";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./components/Keycloak";
+import AppRouter from "./components/AppRouter";
 
 function App() {
   return (
