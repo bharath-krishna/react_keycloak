@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
+import People from "./People";
 import ProtectedRoute from "./ProtectedRoute";
 import userContext from "./UserContext";
 
@@ -14,6 +15,7 @@ function AppRouter() {
           <Redirect exact from="/" to="/home" />
           <Route exact path="/login" component={Login} />
           <ProtectedRoute exact path="/home" component={Home} />
+          <ProtectedRoute exact path="/people" component={People} />
         </Switch>
       </BrowserRouter>
     </userContext.Provider>

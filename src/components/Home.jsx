@@ -48,6 +48,16 @@ function Home({ user }) {
           </Typography>
         </AccordionDetails>
       </Accordion>
+      <Accordion>
+        <AccordionSummary>
+          <Typography variant="h5">Token</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography variant="body1" align="left">
+            {keycloak.token}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
     </Container>
   );
 }
