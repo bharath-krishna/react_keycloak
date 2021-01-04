@@ -1,52 +1,100 @@
 import {
   Container,
+  Grid,
   List,
   ListItem,
-  ListItemText,
+  makeStyles,
+  Table,
+  TableRow,
+  TableCell,
   TextField,
+  Toolbar,
+  TableBody,
   Typography,
 } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { useKeycloak } from "@react-keycloak/web";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+const useStyle = makeStyles((theme) => ({
+  container: {},
+}));
 
 function People() {
-  // const { keycloak } = useKeycloak();
-  const [person, setPerson] = useState({
-    uid: "0x7558",
-    sub: null,
-    name: "bharath",
-    email: "bharath.chakravarthi@gmail.com",
-    kcid: null,
-    gender: "male",
-    created_by: null,
-    username: null,
-    partners: [],
-    parents: [],
-    children: [],
-    is_authenticated: false,
-  });
-  const handleSearch = (e) => {
+  const classes = useStyle();
+  const { keycloak } = useKeycloak();
+  const [people, setPeople] = useState({ people: [] });
+  const [person, setPerson] = useState({});
+  const searchPerson = (name) => {
     const axios = require("axios");
-    axios.defaults.headers.common["Authorization"] = "Bearer sdfasd";
+    axios.defaults.headers.common["Authorization"] = "Bearer " + keycloak.token;
     axios
-      .get("http://localhost:8088/v1/people/" + e.target.value)
+      .get(`http://localhost:8088/v1/people/${name}`)
       .then((result) => {
         setPerson(result.data);
       })
       .catch((err) => {
-        console.log(err);
+        setPerson({});
       });
   };
+  useEffect(() => {
+    const axios = require("axios");
+    axios.defaults.headers.common["Authorization"] = "Bearer " + keycloak.token;
+    axios
+      .get("http://localhost:8088/v1/people")
+      .then((result) => {
+        setPeople(result.data);
+      })
+      .catch((err) => {
+        setPeople({});
+      });
+  }, []);
+
   return (
-    <Container>
-      <TextField id="searchPeople" variant="filled" onChange={handleSearch} />
-      <List>
-        <ListItem>
-          <ListItemText>
-            <Typography variant="h6">{person.name}</Typography>
-          </ListItemText>
-        </ListItem>
-      </List>
+    <Container className={classes.container}>
+      <Toolbar />
+      <Grid container>
+        <Grid item container direction="column" xs={12} md={6}>
+          <Autocomplete
+            onChange={(e, name) => {
+              searchPerson(name);
+            }}
+            id="search"
+            options={people.people.map((option) => option.name)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                lebel="search"
+                placeholder="Search Name"
+                variant="outlined"
+              />
+            )}
+          />
+          <Grid item>
+            {person.name ? (
+              <Table>
+                <TableBody>
+                  {Object.entries(person).map(([key, value]) => {
+                    return (
+                      <TableRow key={key}>
+                        <TableCell>{key}</TableCell>
+                        <TableCell>{value}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            ) : (
+              <div>
+                <Typography variant="h4">Please select the person</Typography>
+              </div>
+            )}
+          </Grid>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          Edit form
+        </Grid>
+      </Grid>
     </Container>
   );
 }

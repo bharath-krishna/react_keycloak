@@ -3,40 +3,18 @@ import {
   AccordionDetails,
   AccordionSummary,
   Container,
+  Toolbar,
   Typography,
 } from "@material-ui/core";
 import { useKeycloak } from "@react-keycloak/web";
-import React, { useState } from "react";
-import Menu from "./Menu";
-import jwt_decode from "jwt-decode";
+import React from "react";
 
-function Home({ user }) {
+function Home({ tokenData }) {
   const { keycloak } = useKeycloak();
-  const [tokenData, setTokenData] = useState(
-    jwt_decode(keycloak.token, null, 2)
-  );
-
-  const handleTokenUpdate = () => {
-    keycloak
-      .updateToken()
-      .then(() => {
-        setTokenData(jwt_decode(keycloak.token, null, 2));
-        console.log("token updated");
-      })
-      .catch(() => {
-        console.log("Token update failed");
-      });
-  };
   return (
     <Container>
-      <Menu handleTokenUpdate={handleTokenUpdate} />
+      <Toolbar />
       {!keycloak.authenticated && <div>not</div>} authenticated
-      {keycloak.authenticated && (
-        <div>
-          <button onClick={() => keycloak.logout()}>Logout</button>
-          <button onClick={handleTokenUpdate}>Refresh token</button>
-        </div>
-      )}
       <Typography variant="h4">Token Details</Typography>
       <Accordion>
         <AccordionSummary>

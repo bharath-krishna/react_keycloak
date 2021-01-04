@@ -1,15 +1,15 @@
+import { Container, Grid, Menu } from "@material-ui/core";
 import { useKeycloak } from "@react-keycloak/web";
 import React, { useState } from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import AppLayout from "./AppLayout";
+import { Route } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
-import MenuBar from "./MenuBar";
 import People from "./People";
 import ProtectedRoute from "./ProtectedRoute";
 import jwt_decode from "jwt-decode";
+import MenuBar from "./MenuBar";
 
-function AppRouter() {
+function AppLayout() {
   const { keycloak } = useKeycloak();
   let token;
   try {
@@ -32,24 +32,15 @@ function AppRouter() {
   };
 
   return (
-    <BrowserRouter>
-      <MenuBar handleTokenUpdate={handleTokenUpdate} />
-      <Switch>
-        {/* <Route exact path="/">
-          <AppLayout />
-        </Route> */}
-        <Redirect exact from="/" to="/home" />
-        <Route exact path="/login" component={Login} />
-        <ProtectedRoute
-          exact
-          path="/home"
-          component={Home}
-          tokenData={tokenData}
-        />
-        <ProtectedRoute exact path="/people" component={People} />
-      </Switch>
-    </BrowserRouter>
+    <Container>
+      <Grid container direction="column">
+        <Grid item>
+          <MenuBar handleTokenUpdate={handleTokenUpdate} />
+        </Grid>
+        <Grid>MainBody</Grid>
+      </Grid>
+    </Container>
   );
 }
 
-export default AppRouter;
+export default AppLayout;
