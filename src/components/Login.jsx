@@ -5,7 +5,7 @@ import { Redirect, Route } from "react-router-dom";
 function Login() {
   const { keycloak } = useKeycloak();
   if (keycloak.authenticated) {
-    return <Redirect exact from="/login" to="/home" />;
+    return <Redirect exact from="/login" to="/people" />;
   }
 
   return (

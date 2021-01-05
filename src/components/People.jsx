@@ -1,8 +1,6 @@
 import {
   Container,
   Grid,
-  List,
-  ListItem,
   makeStyles,
   Table,
   TableRow,
@@ -11,6 +9,7 @@ import {
   Toolbar,
   TableBody,
   Typography,
+  Avatar,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useKeycloak } from "@react-keycloak/web";
@@ -18,6 +17,13 @@ import React, { useEffect, useState } from "react";
 
 const useStyle = makeStyles((theme) => ({
   container: {},
+  option: {
+    fontSize: 15,
+    "& > span": {
+      marginRight: 10,
+      fontSize: 18,
+    },
+  },
 }));
 
 function People() {
@@ -56,11 +62,26 @@ function People() {
       <Grid container>
         <Grid item container direction="column" xs={12} md={6}>
           <Autocomplete
-            onChange={(e, name) => {
-              searchPerson(name);
+            classes={{
+              option: classes.option,
+            }}
+            onChange={(e, person) => {
+              if (person) {
+                searchPerson(person.name);
+              } else {
+                setPerson({});
+              }
             }}
             id="search"
-            options={people.people.map((option) => option.name)}
+            autoHighlight
+            options={people.people.map((option) => option)}
+            getOptionLabel={(person) => person.name}
+            renderOption={(person, state) => (
+              <React.Fragment>
+                <Avatar />
+                <Typography variant="body1">{person.name}</Typography>
+              </React.Fragment>
+            )}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -72,18 +93,7 @@ function People() {
           />
           <Grid item>
             {person.name ? (
-              <Table>
-                <TableBody>
-                  {Object.entries(person).map(([key, value]) => {
-                    return (
-                      <TableRow key={key}>
-                        <TableCell>{key}</TableCell>
-                        <TableCell>{value}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+              <PersonTable person={person} />
             ) : (
               <div>
                 <Typography variant="h4">Please select the person</Typography>
@@ -100,3 +110,20 @@ function People() {
 }
 
 export default People;
+
+function PersonTable({ person }) {
+  return (
+    <Table>
+      <TableBody>
+        {Object.entries(person).map(([key, value]) => {
+          return (
+            <TableRow key={key}>
+              <TableCell>{key}</TableCell>
+              <TableCell>{value}</TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
+  );
+}

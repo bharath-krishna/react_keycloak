@@ -1,8 +1,6 @@
 import { useKeycloak } from "@react-keycloak/web";
 import React, { useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import AppLayout from "./AppLayout";
-import Home from "./Home";
 import Login from "./Login";
 import MenuBar from "./MenuBar";
 import People from "./People";
@@ -35,17 +33,8 @@ function AppRouter() {
     <BrowserRouter>
       <MenuBar handleTokenUpdate={handleTokenUpdate} />
       <Switch>
-        {/* <Route exact path="/">
-          <AppLayout />
-        </Route> */}
-        <Redirect exact from="/" to="/home" />
+        <Redirect exact from="/" to="/people" />
         <Route exact path="/login" component={Login} />
-        <ProtectedRoute
-          exact
-          path="/home"
-          component={Home}
-          tokenData={tokenData}
-        />
         <ProtectedRoute exact path="/people" component={People} />
       </Switch>
     </BrowserRouter>
