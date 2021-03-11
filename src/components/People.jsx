@@ -10,6 +10,8 @@ import {
   TableBody,
   Typography,
   Avatar,
+  FormGroup,
+  FormLabel,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useKeycloak } from "@react-keycloak/web";
@@ -102,7 +104,8 @@ function People() {
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          Edit form
+          {console.log(person.name)}
+          <EditForm person={person} />
         </Grid>
       </Grid>
     </Container>
@@ -125,5 +128,32 @@ function PersonTable({ person }) {
         })}
       </TableBody>
     </Table>
+  );
+}
+
+function EditForm({ person }) {
+  return (
+    <React.Fragment>
+      {Object.entries(person).map(([key, value]) => {
+        return (
+          // <FormGroup>
+          //   <FormLabel>Edit person details</FormLabel>
+          // </FormGroup>
+          <Table>
+            <TableBody>
+              {Object.entries(person).map(([key, value]) => {
+                return (
+                  <TableRow key={key}>
+                    <TableCell>
+                      {key}: <TextField placeholder={key} value={value} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        );
+      })}
+    </React.Fragment>
   );
 }
