@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { ReactKeycloakProvider } from "@react-keycloak/web";
+import keycloak from "./components/Keycloak";
+import AppRouter from "./components/AppRouter";
+import { CircularProgress } from "@material-ui/core";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <header className="App-header"> */}
+      <ReactKeycloakProvider
+        authClient={keycloak}
+        LoadingComponent={
+          <div>
+            Loading....
+            <CircularProgress color="secondary" />
+          </div>
+        }
+      >
+        <AppRouter />
+      </ReactKeycloakProvider>
+      {/* </header> */}
     </div>
   );
 }
